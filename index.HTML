@@ -3,504 +3,483 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Simulador · Escucha Activa & Síntesis</title>
+<title>Evaluación de Habilidades · Call Center Pro</title>
 <style>
-  :root{--morado:#6A1B9A;--lila:#BA68C8;--blanco:#FFFFFF;--gris:#f3f4f8;--text:#1f2937;--ok:#16a34a;--warn:#f59e0b;--bad:#ef4444}
-  *{box-sizing:border-box}
-  body{margin:0;font-family:"Segoe UI",Roboto,Arial,sans-serif;background:linear-gradient(180deg,#2b0b3a 0%,#6a1b9a 40%,#b67bd6 100%);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px}
+  :root {
+    --bg-dark: #0f172a;
+    --card-bg: #1e293b;
+    --primary: #3b82f6; /* Azul corporativo moderno */
+    --accent: #10b981;  /* Verde éxito */
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border: #334155;
+  }
   
-  .app{width:1050px;max-width:100%;background:linear-gradient(180deg,rgba(255,255,255,0.98),rgba(250,245,255,0.9));border-radius:14px;box-shadow:0 16px 40px rgba(11,7,26,0.45);overflow:hidden;display:grid;grid-template-columns:1fr 380px; transition: all 0.3s ease;}
+  * { box-sizing: border-box; outline: none; font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; }
   
-  @media (max-width:1020px){.app{grid-template-columns:1fr;width:95%}}
+  body {
+    margin: 0;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
   
-  header{grid-column:1/-1;padding:18px 26px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(106,27,154,0.08);background:linear-gradient(90deg,rgba(106,27,154,0.06),rgba(186,104,200,0.03))}
-  header h1{margin:0;font-size:20px;color:var(--morado)}
-  header .sub{font-size:13px;color:#5b2b7a;margin-left:6px}
-  .main{padding:20px 26px}
-  .inputName{flex:1;display:flex;gap:8px;align-items:center}
-  label.small{font-size:13px;color:#6b2f7f}
-  input[type="text"]{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(106,27,154,0.12);font-size:14px;background:rgba(255,255,255,0.95)}
-  .controls{display:flex;gap:8px;align-items:center}
-  .btn{background:var(--morado);color:var(--blanco);padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700;box-shadow:0 6px 12px rgba(106,27,154,0.18);transition:all 0.2s}
-  .btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 16px rgba(106,27,154,0.25)}
-  .btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
-  .btn.secondary{background:transparent;color:var(--morado);border:1px solid rgba(106,27,154,0.2);box-shadow:none}
-  .btn.secondary:hover:not(:disabled){background:rgba(106,27,154,0.05)}
-  .btn.small{padding:8px 10px;font-size:14px}
+  /* Layout Principal */
+  .app-frame {
+    width: 1200px;
+    max-width: 100%;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 600px;
+    border: 1px solid var(--border);
+  }
+
+  /* Header */
+  header {
+    background: rgba(15, 23, 42, 0.6);
+    padding: 20px 30px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .brand h1 { margin: 0; font-size: 20px; letter-spacing: 1px; text-transform: uppercase; color: var(--primary); }
+  .brand span { font-size: 12px; color: var(--text-muted); }
+
+  /* Main Area */
+  main { padding: 40px; position: relative; }
+
+  /* SECCIÓN 1: LOGIN (Imponente) */
+  .login-container {
+    max-width: 500px;
+    margin: 40px auto;
+    text-align: center;
+    animation: fadeIn 0.5s ease;
+  }
+  .login-card {
+    background: #253148;
+    padding: 40px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+  .input-group { text-align: left; margin-bottom: 20px; }
+  .input-group label { display: block; color: var(--text-muted); font-size: 13px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .input-field {
+    width: 100%; padding: 14px;
+    background: #0f172a; border: 1px solid var(--border);
+    border-radius: 8px; color: white; font-size: 16px;
+    transition: 0.3s;
+  }
+  .input-field:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+
+  /* Botones Generales */
+  .btn {
+    border: none; padding: 14px 28px; border-radius: 8px;
+    font-weight: 600; cursor: pointer; transition: 0.2s;
+    font-size: 15px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-primary { background: var(--primary); color: white; width: 100%; }
+  .btn-primary:hover { background: #2563eb; }
+  .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+  .btn-secondary:hover { background: rgba(255,255,255,0.05); color: white; }
+  .btn-success { background: var(--accent); color: white; }
+
+  /* SECCIÓN 2: EVALUACIÓN */
+  .game-layout { display: grid; grid-template-columns: 1fr 350px; gap: 30px; height: 100%; }
+  @media(max-width:900px){ .game-layout{grid-template-columns:1fr;} }
   
-  .card{background:linear-gradient(180deg,white,#fbf6ff);border-radius:12px;padding:16px;border:1px solid rgba(106,27,154,0.06);box-shadow:0 6px 18px rgba(106,27,154,0.06);margin-bottom:14px}
-  .scenarioTitle{font-weight:700;color:var(--morado);margin-bottom:8px}
-  .clientBox{background:linear-gradient(90deg,#fff,#faf3ff);padding:14px;border-radius:10px;border:1px solid rgba(106,27,154,0.04);min-height:70px;display:flex;align-items:center;gap:12px}
-  .clientTextHidden{display:none}
+  .scenario-box {
+    background: #fff; color: #1e293b;
+    padding: 30px; border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
   
-  .synthesisArea textarea{width:100%;min-height:130px;padding:12px;border-radius:10px;border:1px solid rgba(106,27,154,0.12);font-size:14px;resize:vertical;font-family:inherit}
-  .synthesisArea textarea:focus{outline:2px solid var(--lila);border-color:transparent}
+  /* Caja de Guía (Requerimiento Usuario) */
+  .guide-box {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 8px; padding: 20px;
+    margin-top: 20px;
+  }
+  .guide-title { color: var(--primary); font-weight: 700; margin-bottom: 10px; font-size: 14px; display: flex; align-items: center; gap: 6px; }
+  .guide-list { margin: 0; padding-left: 20px; color: #334155; font-size: 14px; line-height: 1.6; }
+
+  textarea {
+    width: 100%; height: 150px; padding: 15px;
+    margin-top: 15px; border-radius: 8px; border: 2px solid #e2e8f0;
+    font-size: 15px; resize: none; font-family: inherit;
+  }
+  textarea:focus { border-color: var(--primary); outline: none; }
+
+  /* Sidebar Stats */
+  .stat-panel { display: flex; flex-direction: column; gap: 15px; }
+  .stat-card { background: #2d3b55; padding: 20px; border-radius: 10px; border: 1px solid var(--border); }
+  .stat-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; }
+  .stat-value { font-size: 18px; font-weight: 600; color: white; margin-top: 5px; }
+
+  /* Admin Modal */
+  .modal-overlay {
+    position: fixed; top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.8); z-index: 100;
+    display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);
+  }
+  .modal-content {
+    background: #fff; color: #1e293b;
+    width: 95%; max-width: 1100px; height: 85vh;
+    border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;
+  }
+  .modal-header { padding: 20px; background: #f1f5f9; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+  .modal-body { padding: 0; overflow-y: auto; flex: 1; }
   
-  .guide{background:linear-gradient(90deg,#f9f5ff,#fff);border-radius:8px;padding:10px;border:1px solid rgba(106,27,154,0.06);color:#4b2a66;font-size:13px}
-  .side{padding:20px;background:linear-gradient(180deg,#f8f2fb,#fbf7ff);border-left:1px solid rgba(106,27,154,0.03)}
-  .scoreBox{display:flex;flex-direction:column;gap:10px}
-  .scoreBig{font-size:28px;font-weight:800;color:var(--morado)}
-  .badge{padding:8px 10px;border-radius:999px;font-weight:700;display:inline-block;font-size:12px}
-  .badge.ok{background:rgba(22,163,74,0.12);color:var(--ok);border:1px solid rgba(22,163,74,0.14)}
-  .badge.warn{background:rgba(245,158,11,0.08);color:var(--warn);border:1px solid rgba(245,158,11,0.10)}
-  .badge.bad{background:rgba(239,68,68,0.08);color:var(--bad);border:1px solid rgba(239,68,68,0.10)}
-  footer{grid-column:1/-1;padding:14px 26px;border-top:1px solid rgba(106,27,154,0.04);display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,rgba(186,104,200,0.02),transparent)}
-  
-  /* Animaciones simples */
-  .fade-in {animation: fadeIn 0.4s ease-in-out;}
-  @keyframes fadeIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+  /* Tabla Admin */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: #f8fafc; text-align: left; padding: 12px 15px; border-bottom: 2px solid #e2e8f0; color: #64748b; font-weight: 600; position: sticky; top: 0; }
+  td { padding: 12px 15px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
+  tr:hover { background: #f1f5f9; }
+
+  .hidden { display: none !important; }
+  .fade-in { animation: fadeIn 0.4s ease-out; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 </style>
 </head>
 <body>
-<div class="app" id="appContainer" role="application" aria-label="Simulador de escucha activa">
+
+<div class="app-frame">
   <header>
-    <div>
-      <h1>Simulador · Escucha Activa & Síntesis</h1>
-      <div class="sub">Entrena la escucha real: la IA lee al cliente, el asesor escucha y sintetiza</div>
+    <div class="brand">
+      <h1>Call Center Pro</h1>
+      <span>Sistema de Evaluación de Competencias</span>
     </div>
+    <div style="font-size: 13px; color: var(--text-muted);" id="headerUser">Bienvenido</div>
   </header>
 
-  <main class="main">
-    <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
-      <div class="inputName">
-        <label class="small" for="advisorName">Asesor:</label>
-        <input id="advisorName" type="text" placeholder="Nombre y apellido (ej. Juan Pérez)">
-      </div>
-      <div class="controls">
-        <button id="btnStart" class="btn">▶️ Iniciar</button>
-        <button id="btnReplay" class="btn secondary" disabled title="Repetir audio del cliente">🔁 Reproducir</button>
-        <button id="btnDownload" class="btn" style="display:none">⬇ Descargar Reporte</button>
-        <button id="btnReset" class="btn secondary" style="display:none">Reiniciar</button>
+  <main>
+    <div id="viewLogin" class="login-container">
+      <div class="login-card">
+        <h2 style="margin-top:0; color:white;">Identificación del Postulante</h2>
+        <p style="color:var(--text-muted); font-size:14px; margin-bottom:30px;">
+          Ingrese sus credenciales para iniciar la prueba técnica.
+        </p>
+        
+        <div class="input-group">
+          <label>Documento de Identidad (DNI)</label>
+          <input type="text" id="loginDNI" class="input-field" placeholder="Ej. 70554433">
+        </div>
+        
+        <div class="input-group">
+          <label>Nombre Completo</label>
+          <input type="text" id="loginName" class="input-field" placeholder="Ej. Juan Pérez">
+        </div>
+
+        <button id="btnInit" class="btn btn-primary">INICIAR EVALUACIÓN ▶</button>
       </div>
     </div>
 
-    <div id="gameArea" class="card" style="min-height:300px">
-      <div class="scenarioTitle">Escucha del cliente</div>
-      <div class="clientBox">
-        <div id="clientHidden" class="clientTextHidden">TEXTO OCULTO</div>
-        <div style="flex:1">
-          <div style="font-size:14px;color:#4b2a66;font-weight:600" id="playTitle">Esperando inicio...</div>
-          <div style="margin-top:8px;color:#6b2f7f;font-size:13px" id="playHint">Ingresa tu nombre y pulsa <b>Iniciar</b>.</div>
+    <div id="viewGame" class="game-layout hidden">
+      <div class="scenario-box fade-in">
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+          <h2 style="margin:0; font-size:18px; color:#334155;" id="gameTitle">Escenario 1</h2>
+          <span style="background:#e0f2fe; color:#0369a1; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:700;" id="statusBadge">ESCUCHANDO</span>
         </div>
-      </div>
 
-      <div style="margin-top:12px; display:none" id="synthesisBlock" class="synthesisArea card fade-in">
-        <div style="font-weight:700;margin-bottom:8px">Síntesis — escribe lo que entendiste</div>
-        <textarea id="synthesisInput" placeholder="Resume en 20–40 palabras: ¿Qué pasa?, Motivo, Solución, Datos importantes"></textarea>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
-          <div class="small" id="wordCount">0 palabras</div>
-          <div style="display:flex;gap:8px">
-            <button id="btnSubmitSynth" class="btn small">Enviar síntesis</button>
-            <button id="btnSkipSynth" class="btn secondary small">Omitir</button>
+        <div style="background:#f8fafc; padding:20px; border-left:4px solid var(--primary); margin-bottom:20px;">
+          <div style="font-weight:600; color:#334155;">Situación de Cliente</div>
+          <div style="font-size:13px; color:#64748b; margin-top:4px;">Audio reproduciéndose...</div>
+          <button id="btnReplay" class="btn btn-secondary" style="margin-top:10px; padding:6px 12px; font-size:12px; color:#334155; border-color:#cbd5e1;">🔊 Repetir Audio</button>
+        </div>
+
+        <div id="interactionArea" class="hidden">
+          <div class="guide-box">
+            <div class="guide-title">📌 Puntos que debes colocar en tu síntesis:</div>
+            <ul class="guide-list">
+              <li><b>¿Qué pasó?</b> (Problema principal del cliente)</li>
+              <li><b>¿Por qué?</b> (Motivo o Causa raíz)</li>
+              <li><b>Solución</b> (¿Qué pide o qué se le debe ofrecer?)</li>
+            </ul>
+          </div>
+
+          <textarea id="userResponse" placeholder="Escriba aquí su síntesis respetando los puntos indicados..."></textarea>
+          
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+             <span id="wordCounter" style="color:#94a3b8; font-size:13px;">0 palabras</span>
+             <button id="btnSubmit" class="btn btn-primary" style="width:auto;">Enviar Respuesta</button>
           </div>
         </div>
-
-        <div class="guide" style="margin-top:10px">
-          <strong>📌 Guía de síntesis — incluye:</strong>
-          <ul style="margin:8px 0 0 18px">
-            <li><b>¿Qué pasa?</b> (situación principal)</li>
-            <li><b>Motivo</b> (causa/razón del problema)</li>
-            <li><b>Solución</b> (qué pide o qué busca)</li>
-            <li><b>Datos importantes</b> (fechas, montos, referencias)</li>
-          </ul>
-        </div>
-
-        <div id="synthAnalysis" style="margin-top:10px"></div>
-        <div id="timerBox" style="margin-top:10px;color:#b00020;font-weight:700"></div>
       </div>
 
-      <div id="finalScreen" style="display:none; text-align:center; padding:20px;" class="fade-in">
-        <div id="finalNameDisplay" style="font-size:20px; color:#6b2f7f; margin-bottom:5px; font-weight:600; text-transform:uppercase; letter-spacing:1px"></div>
-        
-        <div style="font-size:24px; color:var(--morado); font-weight:bold;">¡Sesión Finalizada!</div>
-        <p>Has completado todos los escenarios.</p>
-        
-        <div style="margin:20px 0;">
-           <span style="font-size:48px; font-weight:800; color:var(--morado)" id="finalScoreDisplay">0/0</span>
-           <div style="color:#6b2f7f; font-weight:600">Puntaje Total</div>
+      <aside class="stat-panel">
+        <div class="stat-card">
+          <div class="stat-label">Postulante</div>
+          <div class="stat-value" id="dispName">...</div>
+          <div style="font-size:13px; color:var(--text-muted);" id="dispDNI">...</div>
         </div>
-        
-        <p style="font-size:13px; color:#4b2a66">Descarga tu reporte para ver el detalle o inicia una nueva sesión.</p>
+        <div class="stat-card">
+          <div class="stat-label">Progreso</div>
+          <div class="stat-value" id="dispProgress">0 / 5</div>
+        </div>
+      </aside>
+    </div>
 
-        <div style="margin-top:20px; padding-top:15px; border-top:1px solid rgba(106,27,154,0.1);">
-            <div style="font-size:14px; color:#6b2f7f; margin-bottom:4px;">Rendimiento Global</div>
-            <div id="finalPercentResult" style="font-size:36px; font-weight:800; color:var(--lila);">0%</div>
-        </div>
-      </div>
+    <div id="viewFinal" class="login-container hidden">
+       <div class="login-card" style="text-align:center;">
+         <div style="font-size:50px; margin-bottom:10px;">✅</div>
+         <h2 style="color:white; margin:0;">¡Evaluación Completada!</h2>
+         <p style="color:var(--text-muted);">Sus respuestas han sido registradas en el sistema.</p>
+         
+         <div style="background:rgba(255,255,255,0.1); padding:20px; border-radius:10px; margin:30px 0;">
+            <div class="stat-label">NOTA FINAL</div>
+            <div class="stat-value" style="font-size:36px; color:var(--accent);" id="finalScore">0/0</div>
+         </div>
+         
+         <p style="font-size:12px; color:var(--text-muted);">Puede avisar al evaluador para continuar.</p>
+       </div>
     </div>
   </main>
 
-  <aside class="side" id="sidePanel">
-    <div class="card scoreBox">
-      <div style="font-size:13px;color:#5b2b7f">
-        <strong>Asesor:</strong> <span id="advisorShown">—</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
-        <div>
-          <div class="small">Puntos totales</div>
-          <div class="scoreBig" id="scoreTotal">0 / 5</div>
-          <div class="small" id="percentText">0%</div>
-        </div>
-        <div style="text-align:right">
-          <div class="small">Estado</div>
-          <div id="statusBadge" class="badge warn">EN ESPERA</div>
-        </div>
-      </div>
-      <div style="margin-top:12px;font-size:13px;color:#5b2b7f">
-        <strong>Notas automáticas</strong>
-        <div id="autoNotes" style="margin-top:8px;line-height:1.3;color:#4b2a66">Aquí aparecerán recomendaciones.</div>
-      </div>
-    </div>
-  </aside>
-
-  <footer>
-    <div style="color:#4b2a66">Simulador de capacitación — Escucha activa y síntesis.</div>
+  <footer style="padding:15px 30px; border-top:1px solid var(--border); display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted);">
+    <div>© 2025 Call Center Pro v3.0</div>
+    <div style="cursor:pointer; color:var(--text-muted);" onclick="openAdmin()">Admin Access</div>
   </footer>
 </div>
 
+<div id="adminModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 style="margin:0;">Reporte General de Evaluaciones</h3>
+      <div style="display:flex; gap:10px;">
+        <button onclick="downloadExcel()" class="btn btn-success" id="btnExcel" style="font-size:13px; padding:8px 16px;">⬇ Descargar Excel (.csv)</button>
+        <button onclick="closeAdmin()" style="background:none; border:none; font-size:20px; cursor:pointer;">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div id="loadingAdmin" style="padding:30px; text-align:center; color:#64748b;">Cargando datos desde la nube...</div>
+      <div id="adminTableWrapper"></div>
+    </div>
+  </div>
+</div>
+
 <script>
-/* =========================
-   Escenarios (5) — Cobranza
-   ========================= */
-const escenariosBase = [
-  {id:1, texto:"Hola, buenos días. Llamo porque hace dos semanas fui al hospital por una emergencia y tuve que pagar gastos médicos imprevistos. Este mes no pude cubrir la cuota de mi tarjeta y me apareció el aviso de retraso. Me gustaría ver una opción de pago parcial para no afectar mi historial.",
-   claves:{que:["llamo","tarjeta","retraso","no pude cubrir"], motivo:["hospital","emergencia","gastos medicos","gastos médicos"], solucion:["pago parcial","opcion","acuerdo"], datos:["dos semanas","cuota","historial"]}},
-  {id:2, texto:"Soy independiente y este mes mis ingresos bajaron mucho. No quiero atrasarme, pero me resulta difícil pagar el monto completo del préstamo. ¿Podemos ver un refinanciamiento o un plazo más largo con cuotas reducidas?",
-   claves:{que:["ingresos","bajaron","préstamo","prestamo"], motivo:["independiente","bajaron","irregular"], solucion:["refinanciamiento","plazo mas largo","cuotas reducidas","plazo"], datos:["este mes","monto completo"]}},
-  {id:3, texto:"Me aparece un cobro que no reconozco en el estado de cuenta. Nunca autoricé ese pago. Necesito que lo revisen y me indiquen cómo anularlo o devolverlo.",
-   claves:{que:["cobro","no reconozco","estado de cuenta"], motivo:["no autorice","no autoricé","error"], solucion:["revisen","anular","devolver","disputa"], datos:["pago","estado de cuenta"]}},
-  {id:4, texto:"Recibí una carta diciendo que debo tres cuotas atrasadas, pero ya realicé un pago hace una semana en ventanilla. Quiero que verifiquen el registro y actualicen el sistema.",
-   claves:{que:["tres cuotas","atrasadas","carta"], motivo:["ya realice un pago","ya realicé un pago","ventanilla"], solucion:["verifiquen","actualicen","registro"], datos:["una semana","carta","pago"]}},
-  {id:5, texto:"Llamaron de cobranza a mi trabajo y no quiero problemas allí. Necesito que cambien el número de contacto y que la información me llegue solo por correo.",
-   claves:{que:["llamaron","cobranza","trabajo"], motivo:["no quiero problemas","privacidad"], solucion:["cambiar numero","cambiar número","solo por correo","correo"], datos:["numero de contacto","número de contacto"]}}
+// ==========================================
+// CONFIGURACIÓN (Pega aquí tu nueva URL)
+// ==========================================
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRSrEBPMQYHy-Y2Sao6zd_Eaf4F2zwp68LdzQJDmDprulf8yFjEsIcQ-3y2bLkRty9hQ/exec"; 
+
+// DATOS
+const scenarios = [
+  {id:1, text:"Hola, llamo porque mi servicio de internet está muy lento hoy y trabajo desde casa. Necesito una solución urgente porque tengo una reunión en 20 minutos.", keys:["internet","lento","reunion"]},
+  {id:2, text:"Vi un cargo extra en mi facturación de este mes. Yo no contraté ningún seguro de protección, quiero que lo anulen y me devuelvan el dinero.", keys:["cargo extra","seguro","anulen"]},
+  {id:3, text:"Quiero cancelar mi tarjeta de crédito. La anualidad es muy cara y en otros bancos me ofrecen no cobrarme mantenimiento de por vida.", keys:["cancelar","anualidad","mantenimiento"]},
+  {id:4, text:"Estoy intentando hacer una transferencia desde la app pero me sale error de conexión, aunque tengo wifi. Ya la actualicé y sigue igual.", keys:["transferencia","error","app"]},
+  {id:5, text:"Me llegó un mensaje de que mi pedido fue entregado, pero yo no he recibido nada en mi domicilio. Quiero saber quién lo firmó.", keys:["pedido","entregado","no recibido"]}
 ];
 
-/* ===== Estado ===== */
-let escenarios = [];
-let index = -1;
-let totalPoints = 0;
-let results = [];
-let countdown = null;    
-let timeLeft = 0;        
-const PER_QUESTION_SECONDS = 60;
+let userData = { name:"", dni:"" };
+let currentIdx = 0;
+let totalScore = 0;
+let detailsLog = [];
+let adminCache = [];
 
-/* ===== DOM Elements ===== */
-const appContainer = document.getElementById('appContainer');
-const sidePanel = document.getElementById('sidePanel');
-const btnStart = document.getElementById('btnStart');
-const btnReplay = document.getElementById('btnReplay');
-const btnDownload = document.getElementById('btnDownload');
-const btnReset = document.getElementById('btnReset');
-const clientHidden = document.getElementById('clientHidden');
-const playHint = document.getElementById('playHint');
-const playTitle = document.getElementById('playTitle');
-const synthesisBlock = document.getElementById('synthesisBlock');
-const synthInput = document.getElementById('synthesisInput');
-const btnSubmitSynth = document.getElementById('btnSubmitSynth');
-const btnSkipSynth = document.getElementById('btnSkipSynth');
-const wordCount = document.getElementById('wordCount');
-const scoreTotal = document.getElementById('scoreTotal');
-const percentText = document.getElementById('percentText');
-const statusBadge = document.getElementById('statusBadge');
-const autoNotes = document.getElementById('autoNotes');
-const synthAnalysis = document.getElementById('synthAnalysis');
-const timerBox = document.getElementById('timerBox');
-const advisorNameEl = document.getElementById('advisorName');
-const advisorShown = document.getElementById('advisorShown');
-const gameArea = document.getElementById('gameArea');
-const finalScreen = document.getElementById('finalScreen');
-const finalScoreDisplay = document.getElementById('finalScoreDisplay');
-const finalNameDisplay = document.getElementById('finalNameDisplay');
-const finalPercentResult = document.getElementById('finalPercentResult');
+// DOM ELEMENTS
+const views = { login:document.getElementById('viewLogin'), game:document.getElementById('viewGame'), final:document.getElementById('viewFinal') };
 
-/* ===== Utils ===== */
-function norm(s){return (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();}
-function stopTimer(){ if(countdown){ clearInterval(countdown); countdown=null; } }
-function startTimer(){
-  stopTimer();
-  timeLeft = PER_QUESTION_SECONDS;
-  renderTimer();
-  countdown = setInterval(()=>{
-    timeLeft--;
-    renderTimer();
-    if(timeLeft<=0){ stopTimer(); autoAdvance("Tiempo agotado"); }
-  },1000);
-}
-function renderTimer(){
-  timerBox.textContent = `⏱ Tiempo restante: ${timeLeft}s`;
-  if(timeLeft < 10) timerBox.style.color = "#ef4444";
-  else timerBox.style.color = "#b00020";
-}
-
-/* ====== TTS System ====== */
-let cachedVoices = [];
-function loadVoices(){
-  if('speechSynthesis' in window){
-    cachedVoices = speechSynthesis.getVoices();
-    if(!cachedVoices || cachedVoices.length===0){
-      speechSynthesis.onvoiceschanged = ()=>{ cachedVoices = speechSynthesis.getVoices(); };
-    }
-  }
-}
-loadVoices();
-function pickSpanishVoice(){
-  if(!cachedVoices || cachedVoices.length===0) return null;
-  const prefer=['Google español','Microsoft Helena','Microsoft Sabina','Paulina','Monica','Jorge'];
-  for(const p of prefer){
-     const v = cachedVoices.find(voice => voice.name.includes(p));
-     if(v) return v;
-  }
-  return cachedVoices.find(v=> (v.lang||'').toLowerCase().startsWith('es')) || null;
-}
-function speak(text){
-  if(!('speechSynthesis' in window)){
-    alert('Tu navegador no soporta lectura en voz. Usa Chrome/Edge reciente.');
-    return false;
-  }
-  if(speechSynthesis.speaking) speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'es-ES';
-  const v = pickSpanishVoice(); if(v) u.voice = v;
-  u.rate = 1.0; 
-  speechSynthesis.speak(u);
-  return true;
-}
-
-/* ===== Lógica principal ===== */
-function initGame(){
-    escenarios = [...escenariosBase];
-    shuffleArray(escenarios);
-    index = -1;
-    totalPoints = 0;
-    results = [];
-    
-    // Reset UI
-    advisorShown.textContent = advisorNameEl.value || '—';
-    scoreTotal.textContent = `0 / ${escenarios.length}`;
-    percentText.textContent = "0%";
-    statusBadge.className = 'badge warn'; statusBadge.textContent='EN PROCESO';
-    autoNotes.textContent = 'Escucha con atención antes de escribir.';
-    
-    btnStart.style.display = 'none';
-    btnReplay.disabled = false;
-    btnReplay.style.display = 'inline-block';
-    btnDownload.style.display = 'none';
-    btnReset.style.display = 'none';
-    
-    synthesisBlock.style.display = 'none';
-    finalScreen.style.display = 'none';
-    gameArea.querySelector('.clientBox').style.display = 'flex';
-    gameArea.querySelector('.scenarioTitle').style.display = 'block';
-
-    sidePanel.style.display = 'block';
-    appContainer.style.gridTemplateColumns = '1fr 380px';
-
-    startScenario();
-}
-
-function startScenario(){
-  index++;
-  if(index>=escenarios.length){ finish(); return; }
-
-  const sc = escenarios[index];
-  clientHidden.textContent = sc.texto;
-
-  playTitle.textContent = `Cliente ${index+1} de ${escenarios.length}`;
-  playHint.textContent = '🔊 La IA está leyendo al cliente...';
-  playHint.style.color = "#d946ef"; 
-  synthesisBlock.style.display = 'none';
-  btnSubmitSynth.disabled = true;
-  btnSkipSynth.disabled = true;
-  synthInput.value = '';
-  wordCount.textContent = '0 palabras';
-  synthAnalysis.innerHTML = '';
-  timerBox.textContent = '';
+// INICIO
+document.getElementById('btnInit').addEventListener('click', ()=>{
+  const dni = document.getElementById('loginDNI').value.trim();
+  const name = document.getElementById('loginName').value.trim();
+  if(!dni || !name) return alert("Complete sus datos.");
   
-  const ok = speak(sc.texto);
-
-  setTimeout(()=>{
-    synthesisBlock.style.display = 'block';
-    btnSubmitSynth.disabled = false;
-    btnSkipSynth.disabled = false;
-    playHint.textContent = '✍ Ahora escribe tu síntesis. Pulsa "Reproducir" si necesitas oír de nuevo.';
-    playHint.style.color = "#6b2f7f";
-    startTimer();
-    synthInput.focus();
-  }, ok ? 1500 : 1000);
-}
-
-function autoAdvance(reason){
-  if(results.length < index+1){
-    const sc = escenarios[index];
-    results.push({escenario:sc.id,texto:sc.texto,sintesis:"[TIEMPO AGOTADO/OMITIDO]",puntos:0,motivo:reason||'Auto'});
-    updateUI({points:0});
-  }
-  startScenario();
-}
-
-function evaluateSynth(text, sc){
-  const t = norm(text);
-  const found = {
-    que: sc.claves.que.some(k=> t.includes(norm(k))),
-    motivo: sc.claves.motivo.some(k=> t.includes(norm(k))),
-    solucion: sc.claves.solucion.some(k=> t.includes(norm(k))),
-    datos: sc.claves.datos.some(k=> t.includes(norm(k)))
-  };
-  const count = Object.values(found).filter(Boolean).length;
-  return {points: count>=2 ? 1 : 0, found, count};
-}
-
-/* Eventos */
-advisorNameEl.addEventListener('input',()=>{ advisorShown.textContent = advisorNameEl.value || '—'; });
-synthInput.addEventListener('input',()=>{
-  const n=(synthInput.value||'').trim().split(/\s+/).filter(Boolean).length;
-  wordCount.textContent = n + ' palabras';
+  userData = {dni, name};
+  document.getElementById('dispName').textContent = name;
+  document.getElementById('dispDNI').textContent = dni;
+  document.getElementById('headerUser').textContent = name;
+  
+  views.login.classList.add('hidden');
+  views.game.classList.remove('hidden');
+  loadScenario(0);
 });
 
-btnStart.addEventListener('click',()=>{
-  if(!advisorNameEl.value.trim()) { alert("Por favor ingresa tu nombre."); return; }
-  initGame();
-});
-
-btnReplay.addEventListener('click',()=>{
-  const sc = escenarios[index]; if(sc) speak(sc.texto);
-});
-
-btnSubmitSynth.addEventListener('click',()=>{
-  stopTimer();
-  const sc = escenarios[index];
-  const ev = evaluateSynth(synthInput.value, sc);
-  totalPoints += ev.points;
-  results.push({escenario:sc.id, texto:sc.texto, sintesis:synthInput.value, puntos:ev.points});
-  updateUI(ev);
+// JUEGO
+function loadScenario(idx){
+  if(idx >= scenarios.length) return endSession();
+  currentIdx = idx;
+  const sc = scenarios[idx];
   
-  btnSubmitSynth.textContent = "Guardado...";
-  setTimeout(()=> {
-      btnSubmitSynth.textContent = "Enviar síntesis";
-      startScenario();
-  }, 600);
-});
-
-btnSkipSynth.addEventListener('click',()=>{
-  stopTimer();
-  const sc = escenarios[index];
-  results.push({escenario:sc.id,texto:sc.texto,sintesis:"OMITIDO",puntos:0});
-  updateUI({points:0});
-  setTimeout(()=> startScenario(), 400);
-});
-
-btnDownload.addEventListener('click', generateCSV);
-btnReset.addEventListener('click', ()=>{
-    btnStart.style.display = 'block';
-    btnReset.style.display = 'none';
-    btnDownload.style.display = 'none';
-    finalScreen.style.display = 'none';
-    gameArea.querySelector('.clientBox').style.display = 'flex';
-    gameArea.querySelector('.scenarioTitle').style.display = 'block';
-    playTitle.textContent = "Listo para iniciar";
-    playHint.textContent = "Ingresa tu nombre y pulsa Iniciar.";
-    advisorNameEl.value = "";
-    advisorShown.textContent = "—";
-    scoreTotal.textContent = "0 / 5";
-    percentText.textContent = "0%";
-    statusBadge.className = "badge warn"; statusBadge.textContent = "SIN EVALUAR";
-    autoNotes.textContent = "Aquí aparecerán recomendaciones.";
-
-    sidePanel.style.display = 'block';
-    appContainer.style.gridTemplateColumns = '1fr 380px';
-});
-
-/* UI score + feedback */
-function updateUI(ev){
-  scoreTotal.textContent = `${totalPoints} / ${escenarios.length}`;
-  const pct = Math.round((totalPoints/escenarios.length)*100);
-  percentText.textContent = pct + '%';
+  document.getElementById('gameTitle').textContent = `Escenario ${idx+1} de ${scenarios.length}`;
+  document.getElementById('statusBadge').textContent = "ESCUCHANDO...";
+  document.getElementById('statusBadge').style.background = "#e0f2fe";
+  document.getElementById('statusBadge').style.color = "#0369a1";
+  document.getElementById('interactionArea').classList.add('hidden');
+  document.getElementById('userResponse').value = "";
+  document.getElementById('dispProgress').textContent = `${idx} / ${scenarios.length}`;
   
-  if(ev.points){
-    statusBadge.className='badge ok'; statusBadge.textContent='✅ BUENO';
-    synthAnalysis.innerHTML = "<div class='badge ok'>✔ Bien sintetizado</div>";
-    autoNotes.textContent = 'Excelente, capturaste los puntos clave.';
-  } else {
-    statusBadge.className='badge bad'; statusBadge.textContent='❌ MEJORAR';
-    synthAnalysis.innerHTML = "<div class='badge bad'>✖ Falta información</div>";
-    autoNotes.textContent = 'Intenta capturar más detalles: ¿Qué pasó?, ¿Por qué? y ¿Solución?';
-  }
+  speak(sc.text, ()=>{
+    document.getElementById('interactionArea').classList.remove('hidden');
+    document.getElementById('interactionArea').classList.add('fade-in');
+    document.getElementById('statusBadge').textContent = "ESPERANDO SÍNTESIS";
+    document.getElementById('statusBadge').style.background = "#dcfce7";
+    document.getElementById('statusBadge').style.color = "#15803d";
+    document.getElementById('userResponse').focus();
+  });
 }
 
-/* Final */
-function finish(){
-  stopTimer();
-  if(window.speechSynthesis) speechSynthesis.cancel();
+document.getElementById('btnSubmit').addEventListener('click', ()=>{
+  const txt = document.getElementById('userResponse').value.trim();
+  if(txt.length < 5) return alert("Respuesta muy corta.");
   
-  synthesisBlock.style.display = 'none';
-  gameArea.querySelector('.clientBox').style.display = 'none';
-  gameArea.querySelector('.scenarioTitle').style.display = 'none';
+  const sc = scenarios[currentIdx];
+  // Lógica simple de evaluación (2 keywords = 1 punto)
+  const hits = sc.keys.filter(k => txt.toLowerCase().includes(k)).length;
+  const pts = hits >= 2 ? 1 : 0;
   
-  finalScreen.style.display = 'block';
+  totalScore += pts;
+  detailsLog.push({ escenario: sc.id, texto_usuario: txt, puntos: pts, items_correctos: hits });
   
-  // Mostrar Puntos
-  finalScoreDisplay.textContent = `${totalPoints} / ${escenarios.length}`;
-  
-  // Mostrar Nombre
-  finalNameDisplay.textContent = "Asesor: " + (advisorNameEl.value || "Sin nombre");
-  
-  // Mostrar Porcentaje
-  const finalPct = Math.round((totalPoints/escenarios.length)*100);
-  finalPercentResult.textContent = finalPct + "%";
+  loadScenario(currentIdx + 1);
+});
 
-  sidePanel.style.display = 'none';
-  appContainer.style.gridTemplateColumns = '1fr';
+document.getElementById('btnReplay').addEventListener('click', ()=> speak(scenarios[currentIdx].text));
+document.getElementById('userResponse').addEventListener('input', (e)=>{
+   document.getElementById('wordCounter').textContent = e.target.value.split(/\s+/).filter(Boolean).length + " palabras";
+});
 
-  btnReplay.style.display = 'none';
-  btnDownload.style.display = 'inline-block';
-  btnReset.style.display = 'inline-block';
+// FINAL
+function endSession(){
+  views.game.classList.add('hidden');
+  views.final.classList.remove('hidden');
+  const pct = Math.round((totalScore/scenarios.length)*100);
+  document.getElementById('finalScore').textContent = `${totalScore} / ${scenarios.length} (${pct}%)`;
+  
+  // Guardar en Google Sheets (POST)
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      dni: userData.dni,
+      nombre: userData.nombre, // Error fixed: use userData.name, but object key was .name above. Correcting below
+      nombre: userData.name,
+      puntaje: `${totalScore}/${scenarios.length}`,
+      porcentaje: `${pct}%`,
+      detalle: JSON.stringify(detailsLog)
+    })
+  }).catch(e => console.error(e));
 }
 
-/* GENERACIÓN DE CSV OPTIMIZADA PARA EXCEL EN ESPAÑOL */
-function generateCSV(){
-  const advisor=(advisorNameEl.value||"Sin nombre").replace(/"/g,'""');
-  const date=new Date().toLocaleString();
+// ADMIN PANEL
+function openAdmin(){
+  const pass = prompt("Contraseña Admin:");
+  if(pass !== "Geincos2025*") return alert("Acceso denegado");
   
-  // BOM + "sep=;" fuerza a Excel a usar punto y coma como separador
-  let csv = "\uFEFF"; 
-  csv += "sep=;\n"; 
+  document.getElementById('adminModal').style.display = 'flex';
+  document.getElementById('loadingAdmin').style.display = 'block';
+  document.getElementById('adminTableWrapper').innerHTML = '';
   
-  // Encabezados claros
-  csv += `Asesor;"${advisor}"\n`;
-  csv += `Fecha;"${date}"\n\n`;
-  csv += `Escenario;Texto Cliente;Respuesta del Asesor;Puntos\n`;
+  // LEER DATOS (GET) - Ahora usará el doGet del script
+  fetch(SCRIPT_URL)
+    .then(r => r.json())
+    .then(json => {
+       document.getElementById('loadingAdmin').style.display = 'none';
+       if(json.data && json.data.length){
+         adminCache = json.data;
+         renderAdminTable(json.data);
+       } else {
+         document.getElementById('adminTableWrapper').innerHTML = "No hay datos.";
+       }
+    })
+    .catch(e => {
+       document.getElementById('loadingAdmin').innerText = "Error cargando. Verifica que el Script esté publicado como 'Cualquier persona' (Anyone).";
+    });
+}
+
+function closeAdmin(){ document.getElementById('adminModal').style.display = 'none'; }
+
+function renderAdminTable(rows){
+  let html = `<table><thead><tr>
+    <th>Fecha</th>
+    <th>DNI</th>
+    <th>Nombre</th>
+    <th>Nota</th>
+    <th>Detalle</th>
+  </tr></thead><tbody>`;
   
-  results.forEach(r=>{
-    const tCli = (r.texto||'').replace(/"/g,'""').replace(/(\r\n|\n|\r)/gm," ");
-    const tSyn = (r.sintesis||'').replace(/"/g,'""').replace(/(\r\n|\n|\r)/gm," ");
-    
-    // Estructura con ;
-    csv+=`${r.escenario};"${tCli}";"${tSyn}";${r.puntos}\n`;
+  // Invertir para ver el último arriba
+  [...rows].reverse().forEach(row => {
+     // row structure: [Date, DNI, Name, Score, %, JSON]
+     let jsonDetalle = [];
+     try { jsonDetalle = JSON.parse(row[5]); } catch(e){}
+     
+     // Crear un tooltip simple con title
+     let tooltip = jsonDetalle.map(d => `Esc ${d.escenario}: ${d.puntos}pt`).join('\n');
+     
+     html += `<tr>
+       <td>${formatDate(row[0])}</td>
+       <td>${row[1]}</td>
+       <td><b>${row[2]}</b></td>
+       <td><span style="background:#dcfce7; color:#166534; padding:2px 6px; border-radius:4px; font-weight:bold;">${row[3]}</span></td>
+       <td title="${tooltip}" style="cursor:help; font-size:11px; color:#64748b;">(Pausar mouse para ver)</td>
+     </tr>`;
+  });
+  html += `</tbody></table>`;
+  document.getElementById('adminTableWrapper').innerHTML = html;
+}
+
+// EXCEL DOWNLOAD (Separado por punto y coma y con texto completo)
+function downloadExcel(){
+  if(!adminCache.length) return alert("No hay datos para descargar");
+  
+  let csv = "\uFEFF"; // BOM para acentos
+  csv += "sep=;\n";   // Forzar separador Excel español
+  
+  // Encabezados (expandidos para reporte completo)
+  csv += "Fecha;DNI;Nombre;Escenario;Pregunta Texto;Respuesta Candidato;Puntos Obtenidos\n";
+  
+  adminCache.forEach(row => {
+     let fecha = formatDate(row[0]);
+     let dni = row[1];
+     let nombre = row[2];
+     let detalle = [];
+     try { detalle = JSON.parse(row[5]); } catch(e){ return; }
+     
+     // Una fila por cada pregunta respondida (Reporte Detallado)
+     detalle.forEach(d => {
+        // Limpiar saltos de linea en las respuestas para no romper el CSV
+        let cleanResp = (d.texto_usuario || "").replace(/(\r\n|\n|\r|;)/gm, " ");
+        let cleanPreg = scenarios.find(s=>s.id==d.escenario)?.text.substring(0,50) + "..." || "Pregunta " + d.escenario;
+        
+        csv += `${fecha};${dni};${nombre};${d.escenario};"${cleanPreg}";"${cleanResp}";${d.puntos}\n`;
+     });
   });
   
-  const pct = Math.round((totalPoints/escenarios.length)*100);
-  csv+=`\nTOTAL;;${pct}%;${totalPoints}\n`;
-  
-  const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-  a.href=url; 
-  a.download=`Reporte_Sintesis_${advisor.replace(/\s+/g,'_')}.csv`;
-  document.body.appendChild(a); 
-  a.click(); 
-  a.remove();
-  URL.revokeObjectURL(url);
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `Reporte_CallCenter_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
+// UTILS
+function formatDate(iso){
+  try { return new Date(iso).toLocaleString(); } catch(e) { return iso; }
 }
-
-window.addEventListener('beforeunload',()=>{ if(window.speechSynthesis) speechSynthesis.cancel(); });
-
+function speak(text, cb){
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'es-ES';
+  u.onend = cb;
+  window.speechSynthesis.speak(u);
+}
 </script>
 </body>
 </html>
